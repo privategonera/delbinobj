@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "delbinobj": {
+      "commandName": "Project",
+      "commandLineArgs": "-p C:\\trepos -sd ..\\!delThis -vs -dr -l log.log -r -v"
+    }
+  }
+}
