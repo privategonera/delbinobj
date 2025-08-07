@@ -13,5 +13,5 @@
         internal const int ERR_DELETE_FAILED = 1010;
     }
 
-    internal const string FILENAME_LOG = "delbinobj.log";
+    internal const string FORMAT_TIMESTAMP = "yyyy-MM-dd HH:mm:ss";
 }

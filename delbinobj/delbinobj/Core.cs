@@ -174,8 +174,19 @@
 
         Stats stats = Stats.Empty;
 
-        foreach (var dir in directories)
+        ProgressBar? progressBar = (_ctx.ShowUI) ? new ProgressBar
         {
+            X = 0,
+            Y = Console.CursorTop,
+            Width = Console.BufferWidth,
+            Maximum = dirCount,
+        } : null;
+
+        ETA? eta = (_ctx.ShowUI) ? new ETA(dirCount) : null;
+
+        for (int d = 0; d < directories.Length; d++)
+        {
+            string? dir = directories[d];
             try
             {
                 var cmdRslt = invoker.Execute(dir);
@@ -190,6 +201,31 @@
             {
                 _log.LogError($"Failed to {processStr} directory '{dir}': {ex.Message}");
                 return new Result(false, Consts.ExitCodes.ERR_DELETE_FAILED, ex.Message);
+            }
+            finally
+            {
+                if (eta != null)
+                {
+                    eta.Update(d);
+                }
+                if (progressBar != null && eta != null)
+                {
+                    int current = d + 1;
+                    progressBar.Value = current;
+                    int percent = (int)((long)current * 100 / dirCount);
+
+                    string timestamp = DateTime.Now.ToString(Consts.FORMAT_TIMESTAMP);
+                    progressBar.TextBefore = $"{timestamp}: {current}/{dirCount} ";
+                    progressBar.Text = $"{percent}%";
+
+                    TimeSpan etaVal = eta.GetRemainingTime();
+                    string etaStr = etaVal.TotalHours >= 1
+                        ? $"{(int)etaVal.TotalHours:00}:{etaVal.Minutes:00}:{etaVal.Seconds:00}"
+                        : $"{etaVal.Minutes:00}:{etaVal.Seconds:00}";
+                    progressBar.TextAfter = $" {etaStr}";
+
+                    progressBar.Draw();
+                }
             }
         }
         _log.Log($"{dirCount + stats.SubFolders} directories " +

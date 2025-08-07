@@ -9,7 +9,6 @@
             _log.Log($"MOVE {srcPath} -> {destPath}");
             if (!_ctx.IsDryRun)
             {
-                _log.Log($"MOVE {srcPath} -> {destPath}");
                 //Directory.Move(srcPath, destPath);
             }
             return CommandResult.OK;

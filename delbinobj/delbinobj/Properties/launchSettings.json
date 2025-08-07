@@ -2,7 +2,7 @@
   "profiles": {
     "delbinobj": {
       "commandName": "Project",
-      "commandLineArgs": "-p C:\\trepos -sd ..\\!delThis -vs -dr -l log.log -r -v"
+      "commandLineArgs": "-p C:\\rrepos -sd .\\!delThis -vs -l log.log -r -v -ui"
     }
   }
 }

@@ -45,7 +45,7 @@
 
 
     TextWriter[] _writers { get; }
-    string _logFormat = "{0:yyyy-MM-dd HH:mm:ss}: {1}";
+    string _logFormat = "{0:"+Consts.FORMAT_TIMESTAMP+"}: {1}";
     internal Logger()
     {
         _writers = new TextWriter[] { Console.Out };
@@ -78,7 +78,19 @@
         string formattedMessage = string.Format(_logFormat, DateTime.Now, message);
         foreach (var writer in _writers)
         {
-            writer.WriteLine(formattedMessage);
+            if (object.ReferenceEquals(writer, Console.Out))
+            {
+                // For console output, fill the buffer to the end of the line
+                Console.SetCursorPosition(0, Console.CursorTop);
+                Console.Write(new string(' ', Console.BufferWidth - 1)); // Clear the line
+                Console.SetCursorPosition(0, Console.CursorTop); // Reset cursor position
+                Console.WriteLine(formattedMessage);
+            }
+            else
+            {
+                // For file or other writers, just write the message
+                writer.WriteLine(formattedMessage);
+            }
         }
     }
 

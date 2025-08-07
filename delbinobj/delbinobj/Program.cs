@@ -85,7 +85,3 @@ catch (Exception ex)
     Console.Error.WriteLine($"An FATAL error occurred: {ex.Message}");
     return Consts.ExitCodes.ERR_FATAL;
 }
-finally
-{
-    Console.WriteLine("Exiting application.");
-}
