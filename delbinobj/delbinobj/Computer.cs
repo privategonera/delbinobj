@@ -36,9 +36,7 @@
         foreach (var path in paths)
         {
             var stats = DirectoryStats(path);
-            totalStats.SubFolders += stats.SubFolders;
-            totalStats.Files += stats.Files;
-            totalStats.Bytes += stats.Bytes;
+            totalStats.Add(stats);
         }
         return totalStats;
     }

@@ -82,7 +82,7 @@
             {
                 // For console output, fill the buffer to the end of the line
                 Console.SetCursorPosition(0, Console.CursorTop);
-                Console.Write(new string(' ', Console.BufferWidth - 1)); // Clear the line
+                Console.Write(new string(' ', Console.BufferWidth)); // Clear the line
                 Console.SetCursorPosition(0, Console.CursorTop); // Reset cursor position
                 Console.WriteLine(formattedMessage);
             }

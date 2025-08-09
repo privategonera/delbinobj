@@ -53,26 +53,7 @@ try
         logFileOption,
     };
 
-    rootCommand.SetAction(
-        (ParseResult parseResult) =>
-        {
-            Stopwatch stopwatch = Stopwatch.StartNew();
-
-            Context context = Context.Build(parseResult);
-
-            ProgressBar? progressBar = context.ShowUI ? new ProgressBar() : null;
-
-            Logger log = Logger.Build(context);
-
-            var shell = new Shell(log, context);
-
-            var runRslt = shell.Run();
-
-            stopwatch.Stop();
-            log.Log($"Command completed in {stopwatch}");
-            return runRslt;
-        }
-    );
+    rootCommand.SetAction(RootHandler);
     
     var rootRslt = await rootCommand
                     .Parse(args, new CommandLineConfiguration(rootCommand))
@@ -84,4 +65,20 @@ catch (Exception ex)
 {
     Console.Error.WriteLine($"An FATAL error occurred: {ex.Message}");
     return Consts.ExitCodes.ERR_FATAL;
+}
+
+int RootHandler(ParseResult parseResult)
+{
+    Stopwatch stopwatch = Stopwatch.StartNew();
+
+    Context context = Context.Build(parseResult);
+
+    Logger log = Logger.Build(context);
+    var shell = new Shell(log, context);
+
+    var runRslt = shell.Run();
+
+    stopwatch.Stop();
+    log.Log($"Command completed in {stopwatch}");
+    return runRslt;
 }
