@@ -7,14 +7,14 @@
             _log.Log($"DEL {_path}");
             if (!_ctx.IsDryRun)
             {
-                //Directory.Delete(_path);
+                Directory.Delete(_path, recursive: true);
             }
             return CommandResult.OK;
         }
         catch (Exception ex)
         {
             _log.LogError($"Error deleting directory '{_path}': {ex.Message}");
-            return CommandResult.Error;
+            return CommandResult.Error(ex.Message);
         }
     }
 }

@@ -33,7 +33,6 @@
 
     internal Result Ensure()
 	{
-        _log.Log("Ensuring context...");
         if (_ctx.Mode == ProcessingMode.Moving)
         {
             if (!Directory.Exists(_ctx.SoftDeletePath))
@@ -42,16 +41,16 @@
                 {
                     if (_ctx.IsDryRun)
                     {
-                        _log.Log($"(Dry Run) Soft delete directory would be created at '{_ctx.SoftDelete}'.");
+                        _log.Log($"(Dry Run) Soft delete directory would be created at '{_ctx.SoftDeletePath}'.");
                         return Result.OK;
                     }
                     Directory.CreateDirectory(_ctx.SoftDeletePath!);
-                    _log.Log($"Soft delete directory created at '{_ctx.SoftDelete}'.");
+                    _log.Log($"Soft delete directory created at '{_ctx.SoftDeletePath}'.");
                 }
                 catch (Exception ex)
                 {
                     return Result.Error(
-                        $"Failed to create soft delete directory '{_ctx.SoftDelete}': {ex.Message}",
+                        $"Failed to create soft delete directory '{_ctx.SoftDeletePath}': {ex.Message}",
                         Consts.ExitCodes.ERR_DIR_NOT_FOUND
                     );
                 }
@@ -193,7 +192,7 @@
                 if (!cmdRslt.Success)
                 {
                     _log.LogError($"Failed to {processStr} directory '{dir}'.");
-                    return new Result(false, Consts.ExitCodes.ERR_DELETE_FAILED);
+                    return new Result(false, Consts.ExitCodes.ERR_DELETE_FAILED, cmdRslt.Message);
                 }
                 stats.Add(cmdRslt.Statistics);
             }

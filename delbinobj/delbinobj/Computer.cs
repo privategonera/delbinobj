@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-internal static class Statistician
+﻿internal static class Computer
 {
-    internal static Stats CountDirectory(string path)
+    internal static Stats DirectoryStats(string path)
     {
-        var stats = new Stats();
         if (string.IsNullOrWhiteSpace(path))
         {
             throw new ArgumentNullException(nameof(path), "Path cannot be null or empty.");
@@ -17,6 +10,7 @@ internal static class Statistician
         {
             throw new ArgumentException($"Directory '{path}' does not exist.", nameof(path));
         }
+        var stats = new Stats();
         try
         {
             var dirInfo = new DirectoryInfo(path);
@@ -32,7 +26,7 @@ internal static class Statistician
         }
     }
 
-    internal static Stats CountDirectories(params string[] paths)
+    internal static Stats DirectoriesStats(params string[] paths)
     {
         if (paths == null || paths.Length == 0)
         {
@@ -41,7 +35,7 @@ internal static class Statistician
         var totalStats = new Stats();
         foreach (var path in paths)
         {
-            var stats = CountDirectory(path);
+            var stats = DirectoryStats(path);
             totalStats.SubFolders += stats.SubFolders;
             totalStats.Files += stats.Files;
             totalStats.Bytes += stats.Bytes;

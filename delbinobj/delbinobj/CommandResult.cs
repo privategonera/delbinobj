@@ -1,12 +1,15 @@
 ﻿internal class CommandResult
 {
     internal static CommandResult OK => new CommandResult();
-    internal static CommandResult Error = new CommandResult(false);
+    internal static CommandResult Error(string message = "") => 
+        new CommandResult(false) { Message = message};
     internal CommandResult(bool success = true)
     {
         Success = success;
         Statistics = Stats.Empty;
+        Message = string.Empty;
     }
     internal bool Success { get; private set; }
     internal Stats Statistics { get; set; }
+    internal string Message { get; set; } = string.Empty;
 }

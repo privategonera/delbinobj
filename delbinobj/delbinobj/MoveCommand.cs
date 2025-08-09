@@ -1,22 +1,25 @@
-﻿internal class MoveCommand(Context _ctx, string _path, Logger _log) : ICommand
+﻿using System.Security.Cryptography.X509Certificates;
+
+internal class MoveCommand(Context _ctx, string _path, Logger _log) : ICommand
 {
     public CommandResult Execute()
     {
-        string srcPath = _path;
-        string destPath = _path.Replace(_ctx.StartPath, _ctx.SoftDeletePath!);
-        try
+        var srcDir = new DirectoryInfo(_path);
+        DirectoryInfo destDir = new DirectoryInfo(_path.Replace(_ctx.StartPath, _ctx.SoftDeletePath!));
+
+        _log.Log($"MOVE {srcDir.FullName} -> {destDir.FullName}");
+
+        if (!_ctx.IsDryRun)
         {
-            _log.Log($"MOVE {srcPath} -> {destPath}");
-            if (!_ctx.IsDryRun)
+            try
             {
-                //Directory.Move(srcPath, destPath);
+                srcDir.MergeTo(destDir, overwrite: true);
             }
-            return CommandResult.OK;
+            catch (Exception ex)
+            {
+                return CommandResult.Error(ex.Message);
+            }
         }
-        catch (Exception ex)
-        {
-            _log.LogError($"Error moving directory '{srcPath}' to '{destPath}': {ex.Message}");
-            return CommandResult.Error;
-        }
+        return CommandResult.OK;
     }
 }

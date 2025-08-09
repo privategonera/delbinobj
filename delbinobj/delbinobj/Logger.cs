@@ -99,4 +99,10 @@
         string msg = $"ERROR: {message}";
         Log(msg);
     }
+
+    internal void LogWarning(string message)
+    {
+        string msg = $"WARNING: {message}";
+        Log(msg);
+    }
 }

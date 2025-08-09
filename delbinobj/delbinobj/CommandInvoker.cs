@@ -9,16 +9,19 @@
     }
     internal CommandResult Execute(string path)
     {
-        Stats stats = Statistician.CountDirectory(path);
+        Stats stats = Computer.DirectoryStats(path);
 
         ICommand? command = _ctx.SoftDelete 
             ? new MoveCommand(_ctx, path, _log) 
             : new DelCommand(_ctx, path, _log);
-
-        if (command == null) throw new ArgumentNullException(nameof(command), "Command cannot be null.");
         
         var cmdRslt = command.Execute();
         cmdRslt.Statistics = stats;
+        if (!cmdRslt.Success)
+        {
+            _log.LogError($"Error during command execution: {cmdRslt.Message}");
+            return cmdRslt;
+        }
         return cmdRslt;
     }
 }
