@@ -33,8 +33,8 @@
         var ensRslt = _core.Ensure();
         if (!ensRslt.Success)
         {
-            _log.LogError($"Ensuring failed: {valRslt.Message}");
-            return valRslt.ExitCode ?? Consts.ExitCodes.ERR_UNKNOWN;
+            _log.LogError($"Ensuring failed: {ensRslt.Message}");
+            return ensRslt.ExitCode ?? Consts.ExitCodes.ERR_UNKNOWN;
         }
 
         var runRslt = _core.Run();
