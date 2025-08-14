@@ -28,6 +28,42 @@ internal class Context
         return context;
     }
 
+    internal static Context BuildInteractive()
+    {
+        static bool AskBool(string question)
+        {
+            Console.Write($"{question} (y/N): ");
+            var answer = Console.ReadLine();
+            return answer?.Trim().ToLowerInvariant() is "y" or "yes";
+        }
+
+        static string? AskString(string question)
+        {
+            Console.Write($"{question}: ");
+            var answer = Console.ReadLine();
+            return string.IsNullOrWhiteSpace(answer) ? null : answer;
+        }
+
+        string? startPath = AskString("Startup path [.]");
+        startPath = string.IsNullOrWhiteSpace(startPath) ? "." : startPath;
+        var context = new Context(startPath);
+        context.IsRecursive = AskBool("Scan recursively");
+        context.IncludeDotVs = AskBool("Include .vs");
+        context.SoftDeletePath = AskString("Soft delete directory (leave empty to delete)");
+        context.IsDryRun = AskBool("Dry run");
+        context.IsVerbose = AskBool("Verbose output");
+        context.ShowUI = AskBool("Show progress bar");
+        context.LogFilePath = AskString("Log file path (leave empty for none)");
+
+        if (context.SoftDelete)
+        {
+            context.SoftDeletePath = Path.Combine(context.StartPath!, context.SoftDeletePath!);
+            context.SoftDeletePath = new DirectoryInfo(context.SoftDeletePath).FullName;
+        }
+
+        return context;
+    }
+
     internal Context(string startPath)
     {
         StartPath = startPath;
