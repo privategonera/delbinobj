@@ -57,7 +57,7 @@
             }
             else
             {
-                _log.Log($"Soft delete directory already exists at '{_ctx.SoftDelete}'.");
+                _log.Log($"Soft delete directory already exists at '{_ctx.SoftDeletePath}'.");
             }
         }
         return Result.OK;
